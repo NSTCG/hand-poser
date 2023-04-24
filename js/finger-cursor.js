@@ -1,20 +1,26 @@
-WL.registerComponent('finger-cursor', {
-}, {
-    init: function() {
+import {Component} from '@wonderlandengine/api';
+
+export class FingerCursor extends Component {
+    static TypeName = 'finger-cursor';
+    static Properties = {};
+
+    init() {
         this.lastTarget = null;
-    },
-    start: function() {
+    }
+
+    start() {
         this.tip = this.object.getComponent('collision');
-    },
-    update: function() {
+    }
+
+    update() {
         const overlaps = this.tip.queryOverlaps();
 
         let overlapFound = null;
-        for(let i = 0; i < overlaps.length; ++i) {
+        for (let i = 0; i < overlaps.length; ++i) {
             const o = overlaps[i].object;
             const target = o.getComponent('cursor-target');
-            if(target) {
-                if(!target.equals(this.lastTarget)) {
+            if (target) {
+                if (!target.equals(this.lastTarget)) {
                     target.onHover(o, this);
                     target.onClick(o, this);
                 }
@@ -23,12 +29,12 @@ WL.registerComponent('finger-cursor', {
             }
         }
 
-        if(!overlapFound) {
-            if(this.lastTarget) this.lastTarget.onUnhover(this.lastTarget.object, this);
+        if (!overlapFound) {
+            if (this.lastTarget) this.lastTarget.onUnhover(this.lastTarget.object, this);
             this.lastTarget = null;
             return;
         } else {
             this.lastTarget = overlapFound;
         }
-    },
-});
+    }
+}

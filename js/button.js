@@ -1,10 +1,15 @@
-require('@wonderlandengine/components/howler-audio-source');
-require('@wonderlandengine/components/howler-audio-listener');
+import {Component, Type} from '@wonderlandengine/api';
 
-WL.registerComponent('button', {
-    hoverMaterial: {type: WL.Type.Material},
-}, {
-    start: function() {
+import {HowlerAudioSource} from '@wonderlandengine/components';
+
+export class Button extends Component {
+    static TypeName = 'button';
+    static Properties = {
+        hoverMaterial: {type: Type.Material},
+    };
+    static Dependencies = [HowlerAudioSource];
+
+    start() {
         this.mesh = this.object.getComponent('mesh');
         this.defaultMaterial = this.mesh.material;
 
@@ -12,17 +17,23 @@ WL.registerComponent('button', {
         this.target.addHoverFunction(this.onHover.bind(this));
         this.target.addUnHoverFunction(this.onUnHover.bind(this));
 
-        this.soundClick = this.object.addComponent('howler-audio-source', {src: 'sfx/click.wav', spatial: true});
-        this.soundUnClick = this.object.addComponent('howler-audio-source', {src: 'sfx/unclick.wav', spatial: true});
-    },
+        this.soundClick = this.object.addComponent('howler-audio-source', {
+            src: 'sfx/click.wav',
+            spatial: true,
+        });
+        this.soundUnClick = this.object.addComponent('howler-audio-source', {
+            src: 'sfx/unclick.wav',
+            spatial: true,
+        });
+    }
 
-    onHover: function() {
+    onHover() {
         this.mesh.material = this.hoverMaterial;
         this.soundClick.play();
-    },
+    }
 
-    onUnHover: function() {
+    onUnHover() {
         this.mesh.material = this.defaultMaterial;
         this.soundUnClick.play();
-    },
-});
+    }
+}
